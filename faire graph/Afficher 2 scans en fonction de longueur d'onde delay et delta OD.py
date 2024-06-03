@@ -12,7 +12,7 @@ def calculer_delta_OD(I0, I0bckg, I1, I1bckg):
     x = I1 - I1bckg
     y = I0 - I0bckg
     
-    if x <= 0 or y/x <= 0:
+    if x == 0 or y/x <= 0:
         delta_OD = 0
     else:
         delta_OD = math.log10(y/x)
@@ -74,7 +74,7 @@ def executer_script():
         quatrieme_ligne = lire_ligne_securisee(f)  # Lecture de la quatrième ligne (longueurs d'onde)
         if quatrieme_ligne is None:
             messagebox.showerror("Erreur", "Le fichier est trop court.")
-            return
+           # return
         longueurs_donde = quatrieme_ligne.split()[1:]  # Séparation de la ligne en une liste de chaînes de caractères
         longueurs_donde = [float(x) for x in longueurs_donde]  # Conversion en float
 
@@ -84,7 +84,7 @@ def executer_script():
         for _ in range(10):
             lire_ligne_securisee(f)
         ligne_courante = lire_ligne_securisee(f)
-        while ligne_courante and "scan 1" in ligne_courante:  # tant qu'il y a scan 1 sur la ligne il exécute la boucle
+        while ligne_courante and ("scan 1" in ligne_courante):  # tant qu'il y a scan 1 sur la ligne il exécute la boucle
             element = ligne_courante.split()
             # Récupération du delay
             delay.append(float(element[4]))
@@ -108,12 +108,12 @@ def executer_script():
     liste_I1bckg = [[] for _ in range(scan_number)]
     liste_I0 = [[] for _ in range(scan_number)]
     liste_I1 = [[] for _ in range(scan_number)]
-
+    print(len(delay)*6)
     # Lire les données des fichiers et remplir les listes
     for i in range(scan_number):
         # Récupération I1 et I0 bckg
         with open(file_path, 'r') as f:
-            for _ in range(4 + (i * len(delay)*6)):  # Ignorer les lignes avant le scan
+            for _ in range(4 + (i * (len(delay)+1)*6)):  # Ignorer les lignes avant le scan
                 lire_ligne_securisee(f)
             for _ in range(3): 
                 lire_ligne_securisee(f)
